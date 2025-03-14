@@ -139,7 +139,7 @@ main {
     gap: 1.5rem;
 }
 
-#access-section {
+#access-section, #map-section {
     grid-column: 1 / -1;
 }
 
@@ -766,4 +766,260 @@ footer a:hover {
 .ip-location-result .error-detail {
     color: var(--text-light);
     font-size: 0.9rem;
+}
+
+/* 地图部分样式 */
+#map-section .card-content {
+    padding: 1rem;
+}
+
+.map-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--card-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    color: var(--text-color);
+    margin-right: 0.5rem;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#visitor-map {
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 访问者地图标记样式 */
+.visitor-marker {
+    background: transparent;
+}
+
+.marker-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.marker-dot:hover {
+    transform: scale(1.5);
+    background-color: var(--secondary-color);
+}
+
+/* 地图弹出窗口样式 */
+.leaflet-popup-content-wrapper {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.leaflet-popup-tip {
+    background-color: var(--card-color);
+}
+
+.leaflet-popup-content {
+    margin: 0.8rem 1rem;
+    line-height: 1.6;
+}
+
+.leaflet-popup-content strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+/* 适配深色主题 */
+.dark .marker-dot {
+    border-color: var(--card-color);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+    background-color: var(--card-color);
+    color: var(--text-color);
+}
+
+/* 地图加载状态样式 */
+.map-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-color);
+    background-color: var(--card-color);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    z-index: 1000;
+}
+
+.map-loading i {
+    margin-right: 0.5rem;
+}
+
+/* 地图错误提示样式 */
+.map-error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.map-error-overlay .error-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.map-error-overlay .error-content i {
+    font-size: 3rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.map-error-overlay .error-message {
+    color: #666;
+    margin: 1rem 0;
+}
+
+.map-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.map-loading-overlay .loading-content {
+    text-align: center;
+}
+
+.map-loading-overlay .loading-content i {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.popup-content {
+    padding: 10px;
+    max-width: 250px;
+}
+
+.popup-content h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.popup-content p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.popup-content strong {
+    color: #333;
+}
+
+.dark-theme .map-error-overlay {
+    background-color: rgba(33, 37, 41, 0.9);
+}
+
+.dark-theme .map-error-overlay .error-message {
+    color: #adb5bd;
+}
+
+.dark-theme .map-loading-overlay {
+    background-color: rgba(33, 37, 41, 0.8);
+}
+
+.dark-theme .popup-content h3 {
+    color: #e9ecef;
+}
+
+.dark-theme .popup-content p {
+    color: #adb5bd;
+}
+
+.dark-theme .popup-content strong {
+    color: #e9ecef;
+}
+
+/* 地图标签样式 */
+.location-label {
+    background: transparent;
+    border: none;
+}
+
+.location-label div {
+    color: #666;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* 暗色主题下的标签样式 */
+.dark-theme .location-label div {
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* 标记聚合样式 */
+.marker-cluster {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .marker-cluster {
+    background-color: rgba(40, 44, 52, 0.7);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme .map-stats {
+    background-color: var(--card-color);
+    border-color: var(--border-color);
+}
+
+.dark-theme .stat-label {
+    color: var(--text-color);
+}
+
+.dark-theme .stat-value {
+    color: var(--primary-light);
 } 

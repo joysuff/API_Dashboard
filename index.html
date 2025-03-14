@@ -1,23 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Testing Dashboard</title>
+    <title>API 测试面板</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <div class="logo">
             <i class="fas fa-code"></i>
-            <h1>API Testing Dashboard</h1>
+            <h1>API 测试面板</h1>
         </div>
         <div class="settings">
-            <input type="text" id="apiBaseUrl" value="https://768451.xyz" placeholder="API Base URL">
+            <input type="text" id="apiBaseUrl" value="https://768451.xyz" placeholder="API 基础地址">
             <button onclick="updateBaseUrl()" class="btn btn-primary">
                 <i class="fas fa-sync-alt"></i>
-                Update
+                更新
             </button>
             <button id="themeToggle" class="theme-toggle">
                 <i class="fas fa-moon"></i>
@@ -28,21 +31,21 @@
     <main>
         <section class="card" id="quote-section">
             <div class="card-header">
-                <h2><i class="fas fa-quote-left"></i> Daily Quote</h2>
-                <button onclick="fetchQuote()" class="btn-refresh" title="Refresh">
+                <h2><i class="fas fa-quote-left"></i> 每日一句</h2>
+                <button onclick="fetchQuote()" class="btn-refresh" title="刷新">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
             <div class="card-content">
                 <div class="tabs">
-                    <div class="tab active" data-tab="quote-display">Display</div>
-                    <div class="tab" data-tab="quote-test">Test Cases</div>
+                    <div class="tab active" data-tab="quote-display">显示</div>
+                    <div class="tab" data-tab="quote-test">测试用例</div>
                 </div>
                 
                 <div class="tab-content active" id="quote-display">
                     <div class="quote-container">
                         <div class="quote-text">
-                            <p id="quote-text">Click refresh to load a quote...</p>
+                            <p id="quote-text">点击刷新加载一句名言...</p>
                         </div>
                         <p id="quote-author" class="author"></p>
                     </div>
@@ -51,30 +54,30 @@
                 <div class="tab-content" id="quote-test">
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Basic Quote Request</span>
+                            <span>基础请求测试</span>
                             <button class="btn btn-sm btn-outline" onclick="runQuoteTest('basic')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Simple GET request to fetch a quote from the API.</p>
+                            <p>简单的 GET 请求获取一句名言。</p>
                             <div id="quote-test-basic-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
                     
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Response Validation</span>
+                            <span>响应验证</span>
                             <button class="btn btn-sm btn-outline" onclick="runQuoteTest('validation')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Validates that the response contains the expected format with a quote and author.</p>
+                            <p>验证响应是否包含预期的格式（名言和作者）。</p>
                             <div id="quote-test-validation-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
@@ -87,23 +90,23 @@
 
         <section class="card" id="riddle-section">
             <div class="card-header">
-                <h2><i class="fas fa-puzzle-piece"></i> Brain Teaser</h2>
-                <button onclick="fetchRiddle()" class="btn-refresh" title="Refresh">
+                <h2><i class="fas fa-puzzle-piece"></i> 脑筋急转弯</h2>
+                <button onclick="fetchRiddle()" class="btn-refresh" title="刷新">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
             <div class="card-content">
                 <div class="tabs">
-                    <div class="tab active" data-tab="riddle-display">Display</div>
-                    <div class="tab" data-tab="riddle-test">Test Cases</div>
+                    <div class="tab active" data-tab="riddle-display">显示</div>
+                    <div class="tab" data-tab="riddle-test">测试用例</div>
                 </div>
                 
                 <div class="tab-content active" id="riddle-display">
                     <div class="riddle-container">
-                        <p id="riddle-question">Click refresh to load a riddle...</p>
+                        <p id="riddle-question">点击刷新加载谜题...</p>
                         <div class="answer-container">
                             <button id="show-answer" onclick="toggleAnswer()" class="btn btn-secondary">
-                                <i class="fas fa-eye"></i> Show Answer
+                                <i class="fas fa-eye"></i> 显示答案
                             </button>
                             <p id="riddle-answer" class="hidden"></p>
                         </div>
@@ -113,30 +116,30 @@
                 <div class="tab-content" id="riddle-test">
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Basic Riddle Request</span>
+                            <span>基础请求测试</span>
                             <button class="btn btn-sm btn-outline" onclick="runRiddleTest('basic')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Simple GET request to fetch a riddle from the API.</p>
+                            <p>简单的 GET 请求获取一个谜题。</p>
                             <div id="riddle-test-basic-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
                     
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Structure Validation</span>
+                            <span>结构验证</span>
                             <button class="btn btn-sm btn-outline" onclick="runRiddleTest('validation')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Validates that the response contains both a question and an answer.</p>
+                            <p>验证响应是否同时包含问题和答案。</p>
                             <div id="riddle-test-validation-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
@@ -149,24 +152,24 @@
 
         <section class="card" id="ip-location-section">
             <div class="card-header">
-                <h2><i class="fas fa-map-marker-alt"></i> IP Location Lookup</h2>
+                <h2><i class="fas fa-map-marker-alt"></i> IP 地理位置查询</h2>
             </div>
             <div class="card-content">
                 <div class="tabs">
-                    <div class="tab active" data-tab="ip-location-display">Query</div>
-                    <div class="tab" data-tab="ip-location-test">Test Cases</div>
+                    <div class="tab active" data-tab="ip-location-display">查询</div>
+                    <div class="tab" data-tab="ip-location-test">测试用例</div>
                 </div>
                 
                 <div class="tab-content active" id="ip-location-display">
                     <div class="ip-location-container">
                         <div class="ip-input-group">
-                            <input type="text" id="ip-input" placeholder="Enter IP address to lookup">
+                            <input type="text" id="ip-input" placeholder="输入要查询的 IP 地址">
                             <button onclick="queryIpLocation()" class="btn btn-primary">
-                                <i class="fas fa-search"></i> Lookup
+                                <i class="fas fa-search"></i> 查询
                             </button>
                         </div>
                         <div id="ip-location-result" class="ip-location-result hidden">
-                            <!-- Results will be displayed here -->
+                            <!-- 结果将显示在这里 -->
                         </div>
                     </div>
                 </div>
@@ -174,30 +177,30 @@
                 <div class="tab-content" id="ip-location-test">
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Basic IP Lookup Test</span>
+                            <span>基础 IP 查询测试</span>
                             <button class="btn btn-sm btn-outline" onclick="runIpLocationTest('basic')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Test IP lookup with a valid IPv4 address.</p>
+                            <p>使用有效的 IPv4 地址测试查询功能。</p>
                             <div id="ip-location-test-basic-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
                     
                     <div class="test-case">
                         <div class="test-case-header">
-                            <span>Error Handling Test</span>
+                            <span>错误处理测试</span>
                             <button class="btn btn-sm btn-outline" onclick="runIpLocationTest('error')">
-                                <i class="fas fa-play"></i> Run
+                                <i class="fas fa-play"></i> 运行
                             </button>
                         </div>
                         <div class="test-case-body">
-                            <p>Test error handling for various cases (invalid IP, IPv6, etc).</p>
+                            <p>测试各种错误情况的处理（无效IP、IPv6等）。</p>
                             <div id="ip-location-test-error-result" class="test-case-result hidden">
-                                Waiting for results...
+                                等待结果...
                             </div>
                         </div>
                     </div>
@@ -210,8 +213,8 @@
 
         <section class="card" id="stats-section">
             <div class="card-header">
-                <h2><i class="fas fa-chart-bar"></i> API Statistics</h2>
-                <button onclick="fetchStats()" class="btn-refresh" title="Refresh">
+                <h2><i class="fas fa-chart-bar"></i> API 统计</h2>
+                <button onclick="fetchStats()" class="btn-refresh" title="刷新">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
@@ -220,7 +223,7 @@
                     <div id="stats-chart-container">
                         <canvas id="stats-chart"></canvas>
                     </div>
-                    <div id="stats-data">Click refresh to load statistics...</div>
+                    <div id="stats-data">点击刷新加载统计数据...</div>
                 </div>
             </div>
             <div class="card-footer">
@@ -230,47 +233,47 @@
 
         <section class="card" id="access-section">
             <div class="card-header">
-                <h2><i class="fas fa-history"></i> Access Logs</h2>
-                <button onclick="fetchAccessStats()" class="btn-refresh" title="Refresh">
+                <h2><i class="fas fa-history"></i> 访问日志</h2>
+                <button onclick="fetchAccessStats()" class="btn-refresh" title="刷新">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
             <div class="card-content">
                 <div class="filter-controls">
                     <div class="filter-group">
-                        <span class="filter-label">Endpoint:</span>
+                        <span class="filter-label">接口：</span>
                         <select id="endpoint-filter">
-                            <option value="all">All Endpoints</option>
-                            <option value="/quote">Quote</option>
-                            <option value="/riddle">Riddle</option>
+                            <option value="all">所有接口</option>
+                            <option value="/quote">名言</option>
+                            <option value="/riddle">谜题</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <span class="filter-label">IP:</span>
-                        <input type="text" id="ip-filter" placeholder="Filter by IP">
+                        <span class="filter-label">IP：</span>
+                        <input type="text" id="ip-filter" placeholder="按 IP 筛选">
                     </div>
                     <button class="btn btn-primary" onclick="filterAccessLogs()">
-                        <i class="fas fa-search"></i> Search
+                        <i class="fas fa-search"></i> 搜索
                     </button>
                 </div>
                 <div class="access-container">
                     <table id="access-table">
                         <thead>
                             <tr>
-                                <th>IP Address</th>
-                                <th>Location</th>
-                                <th>Endpoint</th>
-                                <th>Access Time</th>
+                                <th>IP 地址</th>
+                                <th>位置</th>
+                                <th>接口</th>
+                                <th>访问时间</th>
                             </tr>
                         </thead>
                         <tbody id="access-logs">
                             <tr>
-                                <td colspan="4" class="center">Click refresh to load access logs...</td>
+                                <td colspan="4" class="center">点击刷新加载访问日志...</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="pagination" id="access-pagination">
-                        <!-- Pagination will be generated here -->
+                        <!-- 分页将在这里生成 -->
                     </div>
                 </div>
             </div>
@@ -278,17 +281,40 @@
                 <div class="endpoint"><code>GET /access-stats</code></div>
             </div>
         </section>
+
+        <section class="card" id="map-section">
+            <div class="card-header">
+                <h2><i class="fas fa-globe-asia"></i> 访问者地理分布</h2>
+                <button onclick="refreshMap()" class="btn-refresh" title="刷新">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div id="visitor-map" style="height: 400px; width: 100%; border-radius: 8px;"></div>
+                <div class="map-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">总访问国家数：</span>
+                        <span id="total-countries">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">今日活跃访问者：</span>
+                        <span id="today-visitors">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer>
-        <p>API Testing Dashboard &copy; 2025 | <a href="#" id="clearData">Clear Local Data</a></p>
+        <p>API 测试面板 &copy; 2025 | <a href="#" id="clearData">清除本地数据</a></p>
     </footer>
 
     <div id="toast" class="toast hidden">
         <div class="toast-header">
             <div class="toast-title">
                 <i id="toast-icon" class="fas fa-info-circle"></i>
-                <span id="toast-title-text">Notification</span>
+                <span id="toast-title-text">通知</span>
             </div>
             <button onclick="hideToast()" class="close-toast">
                 <i class="fas fa-times"></i>
@@ -300,6 +326,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="script.js"></script>
+    <script src="map.js"></script>
 </body>
 </html>
