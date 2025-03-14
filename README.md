@@ -1,2 +1,10 @@
-# API_Dashboard
-daily_quote的前端数据统计面板
+放在daily_quote部署的域名下，结构如下
+
+```
+-public_html/
+--daily_quote/
+--index.html
+--styles.css
+--script.js
+```
+

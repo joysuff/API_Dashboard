@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            <h1>API Testing Dashboard</h1>
+        </div>
+        <div class="settings">
+            <input type="text" id="apiBaseUrl" value="https://768451.xyz" placeholder="API Base URL">
+            <button onclick="updateBaseUrl()" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i>
+                Update
+            </button>
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="card" id="quote-section">
+            <div class="card-header">
+                <h2><i class="fas fa-quote-left"></i> Daily Quote</h2>
+                <button onclick="fetchQuote()" class="btn-refresh" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="tabs">
+                    <div class="tab active" data-tab="quote-display">Display</div>
+                    <div class="tab" data-tab="quote-test">Test Cases</div>
+                </div>
+                
+                <div class="tab-content active" id="quote-display">
+                    <div class="quote-container">
+                        <div class="quote-text">
+                            <p id="quote-text">Click refresh to load a quote...</p>
+                        </div>
+                        <p id="quote-author" class="author"></p>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="quote-test">
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Basic Quote Request</span>
+                            <button class="btn btn-sm btn-outline" onclick="runQuoteTest('basic')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Simple GET request to fetch a quote from the API.</p>
+                            <div id="quote-test-basic-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Response Validation</span>
+                            <button class="btn btn-sm btn-outline" onclick="runQuoteTest('validation')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Validates that the response contains the expected format with a quote and author.</p>
+                            <div id="quote-test-validation-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="endpoint"><code>GET /quote</code></div>
+            </div>
+        </section>
+
+        <section class="card" id="riddle-section">
+            <div class="card-header">
+                <h2><i class="fas fa-puzzle-piece"></i> Brain Teaser</h2>
+                <button onclick="fetchRiddle()" class="btn-refresh" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="tabs">
+                    <div class="tab active" data-tab="riddle-display">Display</div>
+                    <div class="tab" data-tab="riddle-test">Test Cases</div>
+                </div>
+                
+                <div class="tab-content active" id="riddle-display">
+                    <div class="riddle-container">
+                        <p id="riddle-question">Click refresh to load a riddle...</p>
+                        <div class="answer-container">
+                            <button id="show-answer" onclick="toggleAnswer()" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> Show Answer
+                            </button>
+                            <p id="riddle-answer" class="hidden"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="riddle-test">
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Basic Riddle Request</span>
+                            <button class="btn btn-sm btn-outline" onclick="runRiddleTest('basic')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Simple GET request to fetch a riddle from the API.</p>
+                            <div id="riddle-test-basic-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Structure Validation</span>
+                            <button class="btn btn-sm btn-outline" onclick="runRiddleTest('validation')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Validates that the response contains both a question and an answer.</p>
+                            <div id="riddle-test-validation-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="endpoint"><code>GET /riddle</code></div>
+            </div>
+        </section>
+
+        <section class="card" id="ip-location-section">
+            <div class="card-header">
+                <h2><i class="fas fa-map-marker-alt"></i> IP Location Lookup</h2>
+            </div>
+            <div class="card-content">
+                <div class="tabs">
+                    <div class="tab active" data-tab="ip-location-display">Query</div>
+                    <div class="tab" data-tab="ip-location-test">Test Cases</div>
+                </div>
+                
+                <div class="tab-content active" id="ip-location-display">
+                    <div class="ip-location-container">
+                        <div class="ip-input-group">
+                            <input type="text" id="ip-input" placeholder="Enter IP address to lookup">
+                            <button onclick="queryIpLocation()" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Lookup
+                            </button>
+                        </div>
+                        <div id="ip-location-result" class="ip-location-result hidden">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="ip-location-test">
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Basic IP Lookup Test</span>
+                            <button class="btn btn-sm btn-outline" onclick="runIpLocationTest('basic')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Test IP lookup with a valid IPv4 address.</p>
+                            <div id="ip-location-test-basic-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <span>Error Handling Test</span>
+                            <button class="btn btn-sm btn-outline" onclick="runIpLocationTest('error')">
+                                <i class="fas fa-play"></i> Run
+                            </button>
+                        </div>
+                        <div class="test-case-body">
+                            <p>Test error handling for various cases (invalid IP, IPv6, etc).</p>
+                            <div id="ip-location-test-error-result" class="test-case-result hidden">
+                                Waiting for results...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="endpoint"><code>GET /ip-location?ip={ip}</code></div>
+            </div>
+        </section>
+
+        <section class="card" id="stats-section">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-bar"></i> API Statistics</h2>
+                <button onclick="fetchStats()" class="btn-refresh" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="stats-container">
+                    <div id="stats-chart-container">
+                        <canvas id="stats-chart"></canvas>
+                    </div>
+                    <div id="stats-data">Click refresh to load statistics...</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="endpoint"><code>GET /stats</code></div>
+            </div>
+        </section>
+
+        <section class="card" id="access-section">
+            <div class="card-header">
+                <h2><i class="fas fa-history"></i> Access Logs</h2>
+                <button onclick="fetchAccessStats()" class="btn-refresh" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <span class="filter-label">Endpoint:</span>
+                        <select id="endpoint-filter">
+                            <option value="all">All Endpoints</option>
+                            <option value="/quote">Quote</option>
+                            <option value="/riddle">Riddle</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">IP:</span>
+                        <input type="text" id="ip-filter" placeholder="Filter by IP">
+                    </div>
+                    <button class="btn btn-primary" onclick="filterAccessLogs()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="access-container">
+                    <table id="access-table">
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                                <th>Location</th>
+                                <th>Endpoint</th>
+                                <th>Access Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="access-logs">
+                            <tr>
+                                <td colspan="4" class="center">Click refresh to load access logs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="access-pagination">
+                        <!-- Pagination will be generated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="endpoint"><code>GET /access-stats</code></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>API Testing Dashboard &copy; 2025 | <a href="#" id="clearData">Clear Local Data</a></p>
+    </footer>
+
+    <div id="toast" class="toast hidden">
+        <div class="toast-header">
+            <div class="toast-title">
+                <i id="toast-icon" class="fas fa-info-circle"></i>
+                <span id="toast-title-text">Notification</span>
+            </div>
+            <button onclick="hideToast()" class="close-toast">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="toast-body">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
